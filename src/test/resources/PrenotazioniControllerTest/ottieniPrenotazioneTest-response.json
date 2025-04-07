@@ -1,0 +1,10 @@
+{
+  "prenotazione": {
+    "id": 81,
+    "nome": "Teresa Rossi",
+    "data": "2025-04-06",
+    "slot": "SERA",
+    "stato": "IN_ATTESA",
+    "dataInserimento": "2025-04-03T11:30:12Z"
+  }
+}

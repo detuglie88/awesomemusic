@@ -1,0 +1,149 @@
+openapi: 3.0.0
+info:
+  title: Prenotazione Sala Prove API
+  description: API per gestire la prenotazione delle sale di "Awesome Music"
+  version: 1.0.0
+paths:
+  /prenotazioni:
+    get:
+      operationId: ottieniPrenotazioni
+      summary: Ottieni l'elenco delle prenotazioni
+      description: Recupera l'elenco delle prenotazioni con la possibilità di filtrare per stato e per data di inserimento
+      parameters:
+        - name: stato
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/StatoPrenotazione'
+        - name: slot
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/SlotPrenotazione'
+        - name: ordinaPerDataInserimento
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: Dettaglio della prenotazione
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrenotazioniResponse'
+    post:
+      operationId: creaPrenotazione
+      summary: Effettua una prenotazione
+      description: Permette agli utenti di prenotare una sala senza registrazione
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrenotazioneRequest'
+      responses:
+        201:
+          description: Prenotazione effettuata con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrenotazioneResponse'
+  /prenotazioni/{id}:
+    get:
+      operationId: ottieniPrenotazione
+      summary: Ottieni stato prenotazione
+      description: Recupera il dettaglio della prenotazione tramite codice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Dettaglio della prenotazione
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrenotazioneResponse'
+    patch:
+      operationId: aggiornaPrenotazione
+      summary: Aggiorna stato prenotazione
+      description: Consente al responsabile della sala prove di approvare o rifiutare la prenotazione
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatoPrenotazioneRequest'
+      responses:
+        200:
+          description: Stato aggiornato con successo
+components:
+  schemas:
+    PrenotazioneRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        data:
+          type: string
+          format: date
+        slot:
+          $ref: '#/components/schemas/SlotPrenotazione'
+    SlotPrenotazione:
+      type: string
+      enum:
+        - MATTINA
+        - POMERIGGIO
+        - SERA
+    PrenotazioneResponse:
+      type: object
+      properties:
+        prenotazione:
+          $ref: '#/components/schemas/Prenotazione'
+    Prenotazione:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nome:
+          type: string
+        data:
+          type: string
+          format: date
+        slot:
+          $ref: '#/components/schemas/SlotPrenotazione'
+        stato:
+          $ref: '#/components/schemas/StatoPrenotazione'
+        dataInserimento:
+          type: string
+          format: date-time
+    StatoPrenotazioneRequest:
+      type: object
+      properties:
+        stato:
+          $ref: '#/components/schemas/StatoPrenotazione'
+    StatoPrenotazione:
+      type: string
+      enum:
+        - IN_ATTESA
+        - APPROVATA
+        - RIFIUTATA
+    PrenotazioniResponse:
+      type: object
+      properties:
+        prenotazioni:
+          type: array
+          items:
+            $ref: '#/components/schemas/Prenotazione'
