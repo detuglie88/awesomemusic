@@ -1,3 +1,7 @@
+--  CREATE DATABASE awesome_music_test WITH owner postgres;
+
+--  CREATE SCHEMA public;
+
 DROP TABLE prenotazione;
 
 CREATE TABLE prenotazione (
