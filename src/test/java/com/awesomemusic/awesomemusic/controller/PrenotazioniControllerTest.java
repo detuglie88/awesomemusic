@@ -10,12 +10,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_CLASS;
 
 @SpringBootTest(classes= AwesomeMusicApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j(topic = "target")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Sql(scripts = {"classpath:setup.sql"}, executionPhase = BEFORE_TEST_CLASS)
 public class PrenotazioniControllerTest extends BaseTest {
 
     @Autowired
